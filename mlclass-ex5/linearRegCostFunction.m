@@ -18,18 +18,14 @@ grad = zeros(size(theta));
 %
 %               You should set J to the cost and grad to the gradient.
 %
+J = (1/(2*m))*sum( (X*theta-y).^2 );
+reg = (lambda/(2*m))*sum(theta(2:end).^2);
+J = J + reg;
 
-
-
-
-
-
-
-
-
-
-
-
+%grad(1) = (1/m)*sum( (X*theta-y).*X(:,1) )
+for j = 1:size(grad)
+  grad(j) = (1/m)*sum( (X*theta-y).*X(:,j) ) + (lambda/m)*[0; theta(2:end)](j);
+endfor
 % =========================================================================
 
 grad = grad(:);
