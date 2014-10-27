@@ -19,12 +19,19 @@ grad = zeros(size(theta));
 %
 % Note: grad should have the same dimensions as theta
 %
+% h(X(iter,:)) = sigmoid(X(iter,:)*theta);
+%
+cost = 0;
+for iter = 1:m
+  cost = cost + y(iter)*log(sigmoid(X(iter,:)*theta)) + (1 - y(iter))*log(1 - sigmoid(X(iter,:)*theta));
+end
+J = -cost/m;
 
+for iter = 1:m
+  grad = grad + (sigmoid(X(iter,:)*theta) - y(iter)) * X(iter, :)';
+end
 
-
-
-
-
+grad = (1/m) * grad;
 
 
 % =============================================================
