@@ -62,25 +62,43 @@ Theta2_grad = zeros(size(Theta2));
 %               and Theta2_grad from Part 2.
 %
 
+% Add ones to the X data matrix
+%X = [ones(m, 1) X];
 
+A1 = [ones(m, 1) X];
+Z2 = A1*Theta1';
+A2 = sigmoid(Z2);
+A2 = [ones(m, 1) A2];
+Z3 = A2*Theta2';
+A3 = sigmoid(Z3);
 
+% re-code the labels from y as vectors, forming Y (matrix of size:=(m x num_labels) )
+Y = zeros(m, num_labels);
+for i = 1:m
+  Y(i, y(i)) = 1;
+endfor
 
+J = -(1/m)*sum( sum( (Y.*log(A3) + (1-Y).*log(1-A3))' ) );
 
+reg1 = sum(sum( (Theta1(:, 2:end).^2)' ));  %skip the bias
+reg2 = sum(sum( (Theta2(:, 2:end).^2)' ));  %skip the bias
+reg = reg1 + reg2;
+reg = (lambda/(2*m))*reg;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+J = J + reg;
 % -------------------------------------------------------------
+
+D3 = A3 - Y;
+D2 = (D3*Theta2(:, 2:end)).*sigmoidGradient(Z2);
+
+Delta_2 = D3'*A2;
+Delta_1 = D2'*A1;
+
+Theta1_grad = (1/m)*Delta_1;
+Theta2_grad = (1/m)*Delta_2;
+
+Theta1_grad = Theta1_grad + (lambda/m)*[zeros(size(Theta1, 1), 1), Theta1(:, 2:end)];
+Theta2_grad = Theta2_grad + (lambda/m)*[zeros(size(Theta2, 1), 1), Theta2(:, 2:end)];
 
 % =========================================================================
 
