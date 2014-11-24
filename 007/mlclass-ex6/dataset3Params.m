@@ -23,11 +23,31 @@ sigma = 0.3;
 %        mean(double(predictions ~= yval))
 %
 
+%predictions = svmPredict('gaussianKernel', Xval);
+%prediction_error = mean(double(predictions ~= yval))
+C_vect = [0.01; 0.03; 0.1; 0.3; 1; 3; 10; 30];
+sigma_vect = [0.01; 0.03; 0.1; 0.3; 1; 3; 10; 30];
 
+prediction_error = 1000;
 
-
-
-
+for C_iter = C_vect',
+  %fprintf('C_iter: %2.2f \n', C_iter);
+  for sigma_iter = sigma_vect',
+    %fprintf('  sigma: %.2f \n', sigma_iter);
+    
+    model = svmTrain(X, y, C_iter, @(x1, x2) gaussianKernel(x1, x2, sigma_iter));
+    predictions = svmPredict(model, Xval);
+    prediction_error_iter = mean(double(predictions ~= yval));
+    %fprintf('  -> prediction_error: %f \n', prediction_error_iter);
+    if (prediction_error_iter<prediction_error)
+      prediction_error = prediction_error_iter;
+      C = C_iter;
+      sigma = sigma_iter;
+    endif
+  end;
+  %fprintf('\n');
+end;
+%fprintf('\n');
 
 % =========================================================================
 
