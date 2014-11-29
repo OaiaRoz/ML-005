@@ -25,14 +25,14 @@ centroids = zeros(K, n);
 %
 % Note: You can use a for-loop over the centroids to compute this.
 %
-
-
-
-
-
-
-
-
+for k = 1:K
+  indices = find (idx == k);
+  tempSum = zeros(n, 1)';
+  for i = indices'
+    tempSum = tempSum + X(i, :);
+  end;
+  centroids(k, :) = tempSum / size(indices,1);
+end;
 % =============================================================
 
 
