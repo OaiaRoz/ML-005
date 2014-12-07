@@ -40,21 +40,22 @@ Theta_grad = zeros(size(Theta));
 %                     partial derivatives w.r.t. to each element of Theta
 %
 
+%J = (1/2)*( sum( sum( M( R==1 ))) );
 
+%PredMovRat4AllUsers = X * Theta';
+%MovRatingErr = X * Theta' - Y;
+error_factor = (X * Theta' - Y) .* R;
+J = (sum(sum(error_factor.^2)))/2;
 
+X_grad = error_factor * Theta;
+Theta_grad = error_factor' * X;
 
+%Regularization
+J_reg = (lambda/2)*( sum(sum(Theta.^2)) + sum(sum(X.^2)) );
+J = J + J_reg; 
 
-
-
-
-
-
-
-
-
-
-
-
+X_grad = X_grad + lambda * X;
+Theta_grad = Theta_grad + lambda * Theta;
 % =============================================================
 
 grad = [X_grad(:); Theta_grad(:)];
